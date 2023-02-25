@@ -7,6 +7,12 @@ class View:
     def __init__(self, controller: Controller):
         self.controller = controller
 
+    def validate_input(self,input_string: str):
+        if not input_string.isdigit():
+            return input('Only numbers allowed. Enter ID:\n')
+        else:
+            return input_string
+
     def validate_id(self, id: int) -> bool:
         notes_list = self.controller.read_notebook()
         id_list = [note.get_id() for note in notes_list]
@@ -32,7 +38,7 @@ class View:
                         self.controller.create_note(title, content)
                         continue
                     case 'update':
-                        id = int(input('Enter ID: '))
+                        id = int(self.validate_input(input('Enter ID: ')))
                         if self.validate_id(id):
                             new_title = input('Enter new title: ')
                             new_content = input('Enter new content: ')
@@ -42,7 +48,7 @@ class View:
                             print('No such ID\n')
                             continue
                     case 'delete':
-                        id = int(input('Enter ID: '))
+                        id = int(self.validate_input(input('Enter ID: ')))
                         if self.validate_id(id):
                             self.controller.delete_note(id)
                             continue
@@ -50,7 +56,7 @@ class View:
                             print('No such ID\n')
                             continue
                     case 'find':
-                        id = int(input('Enter ID: '))
+                        id = int(self.validate_input(input('Enter ID: ')))
                         if self.validate_id(id):
                             note = self.controller.find_by_id(id)
                             print(f'ID: {note.get_id()} Title: {note.get_title()} Content: {note.get_content()} Date: '
@@ -64,6 +70,5 @@ class View:
                     case _:
                         print('Wrong command. Try again.\n')
             except Exception:
-                print(Exception.with_traceback())
                 print('You did something wrong. Try again.')
                 continue
