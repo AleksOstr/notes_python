@@ -2,11 +2,11 @@ import datetime
 
 
 class Note:
-    def __init__(self, id: int, title: str, content: str):
+    def __init__(self, id: int, title: str, content: str, date: str):
         self.id = id
         self.title = title
         self.content = content
-        self.date = datetime.datetime.now()
+        self.date = date
 
     def get_id(self):
         return self.id
@@ -16,6 +16,9 @@ class Note:
 
     def get_content(self):
         return self.content
+
+    def get_date(self):
+        return self.date
 
     def set_new_date(self):
         self.date = datetime.datetime.now()
