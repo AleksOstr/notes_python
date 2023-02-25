@@ -1,6 +1,6 @@
 import datetime
 
-from note import Note
+from model.note import Note
 
 
 class Notebook:
@@ -9,8 +9,11 @@ class Notebook:
         lines: [Note] = []
         file = open('notes.csv', 'r')
         for line in file:
-            note_parts = line.split(';')
-            lines.appned(Note(int(note_parts[0]), note_parts[1], note_parts[2], note_parts[3]))
+            if not line:
+                continue
+            else:
+                note_parts = line.strip('\n').split(';')
+                lines.append(Note(int(note_parts[0]), note_parts[1], note_parts[2], note_parts[3]))
         file.close()
         return lines
 

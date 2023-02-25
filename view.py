@@ -7,16 +7,24 @@ class View:
     def __init__(self, controller: Controller):
         self.controller = controller
 
+    def validate_id(self, id: int) -> bool:
+        notes_list = self.controller.read_notebook()
+        id_list = [note.get_id() for note in notes_list]
+        if id not in id_list:
+            return False
+        else:
+            return True
+
     def run(self):
-        try:
-            while True:
+        while True:
+            try:
                 command = input(commands).lower().strip()
                 match command:
                     case 'show':
                         notes = self.controller.read_notebook()
                         for note in notes:
-                            print(f'ID: {note.get_id()} Title: {note.get_title()} Content: {note.get_content()}\
-                             Date: {note.get_date()}\n')
+                            print(f'ID: {note.get_id()} Title: {note.get_title()} Content: {note.get_content()} Date: '
+                                  f'{note.get_date()}\n')
                         continue
                     case 'create':
                         title = input('Enter title: ')
@@ -25,21 +33,37 @@ class View:
                         continue
                     case 'update':
                         id = int(input('Enter ID: '))
-                        new_title = input('Enter new title: ')
-                        new_content = input('Enter new content: ')
-                        self.controller.update_note(id, new_title, new_content)
-                        continue
+                        if self.validate_id(id):
+                            new_title = input('Enter new title: ')
+                            new_content = input('Enter new content: ')
+                            self.controller.update_note(id, new_title, new_content)
+                            continue
+                        else:
+                            print('No such ID\n')
+                            continue
                     case 'delete':
                         id = int(input('Enter ID: '))
-                        self.controller.delete_note(id)
-                        continue
+                        if self.validate_id(id):
+                            self.controller.delete_note(id)
+                            continue
+                        else:
+                            print('No such ID\n')
+                            continue
                     case 'find':
                         id = int(input('Enter ID: '))
-                        note = self.controller.find_by_id(id)
-                        print(f'ID: {note.get_id()} Title: {note.get_title()} Content: {note.get_content()}\
-                        Date: {note.get_date()}\n')
-                        continue
+                        if self.validate_id(id):
+                            note = self.controller.find_by_id(id)
+                            print(f'ID: {note.get_id()} Title: {note.get_title()} Content: {note.get_content()} Date: '
+                                  f'{note.get_date()}\n')
+                            continue
+                        else:
+                            print('No such ID\n')
+                            continue
                     case 'exit':
                         break
-        except Exception:
-            print('You did something wrong. Try again.')
+                    case _:
+                        print('Wrong command. Try again.\n')
+            except Exception:
+                print(Exception.with_traceback())
+                print('You did something wrong. Try again.')
+                continue
