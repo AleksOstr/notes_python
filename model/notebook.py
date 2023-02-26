@@ -57,3 +57,12 @@ class Notebook:
         for note in notes_list:
             if note.get_id() == id:
                 return note
+
+    def filter_by_date(self, date: str) -> [Note]:
+        notes_list = self.read_notes()
+        result = []
+        for note in notes_list:
+            if date in note.get_date():
+                result.append(note)
+        return result
+

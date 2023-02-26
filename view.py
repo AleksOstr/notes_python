@@ -21,6 +21,14 @@ class View:
         else:
             return True
 
+    def print_note(self,note):
+        print(f'ID: {note.get_id()} Title: {note.get_title()} Content: {note.get_content()} Date: {note.get_date()}')
+
+    def print_notes_list(self, notes_list):
+        for note in notes_list:
+            print(
+                f'ID: {note.get_id()} Title: {note.get_title()} Content: {note.get_content()} Date: {note.get_date()}')
+
     def run(self):
         while True:
             try:
@@ -28,14 +36,13 @@ class View:
                 match command:
                     case 'show':
                         notes = self.controller.read_notebook()
-                        for note in notes:
-                            print(f'ID: {note.get_id()} Title: {note.get_title()} Content: {note.get_content()} Date: '
-                                  f'{note.get_date()}\n')
+                        self.print_notes_list(notes)
                         continue
                     case 'create':
                         title = input('Enter title: ')
                         content = input('Enter content: ')
                         self.controller.create_note(title, content)
+                        print(f'Note was successfully created\n')
                         continue
                     case 'update':
                         id = int(self.validate_input(input('Enter ID: ')))
@@ -43,6 +50,7 @@ class View:
                             new_title = input('Enter new title: ')
                             new_content = input('Enter new content: ')
                             self.controller.update_note(id, new_title, new_content)
+                            print(f'Note with ID: {id} was successfully updated\n')
                             continue
                         else:
                             print('No such ID\n')
@@ -51,6 +59,7 @@ class View:
                         id = int(self.validate_input(input('Enter ID: ')))
                         if self.validate_id(id):
                             self.controller.delete_note(id)
+                            print(f'Note with ID: {id} was successfully deleted\n')
                             continue
                         else:
                             print('No such ID\n')
@@ -59,11 +68,19 @@ class View:
                         id = int(self.validate_input(input('Enter ID: ')))
                         if self.validate_id(id):
                             note = self.controller.find_by_id(id)
-                            print(f'ID: {note.get_id()} Title: {note.get_title()} Content: {note.get_content()} Date: '
-                                  f'{note.get_date()}\n')
+                            self.print_note(note)
                             continue
                         else:
                             print('No such ID\n')
+                            continue
+                    case 'filter':
+                        date = input('Enter date (format: YYYY-MM-DD or YYYY-MM or YYYY)\n')
+                        result = self.controller.filter_by_date(date)
+                        if len(result) == 0:
+                            print('Nothing was found\n')
+                            continue
+                        else:
+                            self.print_notes_list(result)
                             continue
                     case 'exit':
                         break

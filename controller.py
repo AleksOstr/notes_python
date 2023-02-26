@@ -22,3 +22,6 @@ class Controller:
 
     def find_by_id(self, id: int) -> Note:
         return self.notebook.find_by_id(id)
+
+    def filter_by_date(self, date: str) -> [Note]:
+        return self.notebook.filter_by_date(date)
